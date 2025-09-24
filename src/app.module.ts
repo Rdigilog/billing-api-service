@@ -9,8 +9,6 @@ import { JwtConfig } from './config/jwt.config';
 import { MailConfig } from './config/mail.config';
 import { QueueConfig } from './config/queue.config';
 import { StatusInterceptor } from './interceptors/status.interceptor';
-import { AnalyticsService } from './services/analytics.service';
-import { AnalyticsController } from './controllers/analytics.controller';
 import { UserService } from './services/user.service';
 import { PrismaService } from './config/prisma.service';
 import { bullboardConfig } from './config/bull-board.config';
@@ -33,7 +31,6 @@ import { bullboardConfig } from './config/bull-board.config';
     CacheModule.registerAsync(RedisCacheOptions)
   ],
   controllers: [
-    AnalyticsController
   ],
   providers: [
     {
@@ -41,7 +38,6 @@ import { bullboardConfig } from './config/bull-board.config';
       useClass: StatusInterceptor,
     },
     UserService,
-    AnalyticsService,
     PrismaService,
   ],
 })
