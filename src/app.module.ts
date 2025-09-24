@@ -8,10 +8,12 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtConfig } from './config/jwt.config';
 import { MailConfig } from './config/mail.config';
 import { QueueConfig } from './config/queue.config';
-import { PlanController } from './controllers/plan.controller';
-import { RoleController } from './controllers/role.controller';
-import { TermLegalController } from './controllers/term-legal.controller';
 import { StatusInterceptor } from './interceptors/status.interceptor';
+import { AnalyticsService } from './services/analytics.service';
+import { AnalyticsController } from './controllers/analytics.controller';
+import { UserService } from './services/user.service';
+import { PrismaService } from './config/prisma.service';
+import { bullboardConfig } from './config/bull-board.config';
 
 @Module({
   imports: [
@@ -23,17 +25,24 @@ import { StatusInterceptor } from './interceptors/status.interceptor';
     QueueConfig,
     JwtConfig,
     MailConfig,
+    bullboardConfig,
+    // QueueModuleConfig,
     ConfigModule.forRoot(),
     HttpModule,
     UtilsModule,
-    CacheModule.registerAsync(RedisCacheOptions),
+    CacheModule.registerAsync(RedisCacheOptions)
   ],
-  controllers: [PlanController, RoleController, TermLegalController],
+  controllers: [
+    AnalyticsController
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: StatusInterceptor,
     },
+    UserService,
+    AnalyticsService,
+    PrismaService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

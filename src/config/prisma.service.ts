@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client/index';
 import { readReplicas } from '@prisma/extension-read-replicas';
+
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   // constructor() {

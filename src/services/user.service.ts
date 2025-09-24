@@ -1,9 +1,9 @@
 
 
-import { Injectable } from '@nestjs/common';
+import { Global, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma.service';
-import { LoggedInUser } from 'src/models/types/user.types';
 
+@Global()
 @Injectable()
 export class UserService extends PrismaService {
 
