@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { process } from 'uniqid';
+import crypto from 'crypto'
 
 @Injectable()
 export class UtilsService {
@@ -14,6 +15,13 @@ export class UtilsService {
     const currentPage = page ? +page : 1;
     const totalPages = totalItems > limit ? Math.ceil(totalItems / limit) : 1;
     return { totalItems, result, totalPages, currentPage };
+  }
+
+  nextBilling() {
+    const currentDate = new Date();
+    const nextBilling = new Date(currentDate);
+    nextBilling.setDate(currentDate.getDate() + 30);
+    return nextBilling;
   }
 
   //to help exclude any database field from being send back via apis i.e password and activation tokens
@@ -64,9 +72,20 @@ export class UtilsService {
   }
   lisaUnique() {
     try {
-      return process('IGC_').toUpperCase();
+      return process('RD').toUpperCase();
     } catch (e) {
       return null;
     }
+  }
+
+  randomString(length = 8) {
+    const chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const bytes = crypto.randomBytes(length);
+    let out = '';
+    for (let i = 0; i < length; i++) {
+      out += chars[bytes[i] % chars.length];
+    }
+    return out;
   }
 }

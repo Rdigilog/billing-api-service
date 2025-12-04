@@ -5,9 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { CONFIG_KEYS } from './config/config.keys';
 import { getConfigValues } from './config/configuration';
-import { writeFileSync } from 'fs';
-import { Response } from 'express';
-import { join } from 'path';
 
 async function bootstrap() {
   const response = await getConfigValues();

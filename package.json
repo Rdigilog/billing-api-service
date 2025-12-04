@@ -22,6 +22,12 @@
     "db:pull": "prisma db pull --schema=prisma/schema.prisma && prisma-case-format --file prisma/schema.prisma --table-case pascal,singular --field-case camel,singular --map-table-case snake --map-field-case snake --enum-case pascal,singular --map-enum-case snake && prisma generate --schema=prisma/schema.prisma"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.943.0",
+    "@bull-board/api": "^6.12.7",
+    "@bull-board/express": "^6.12.7",
+    "@bull-board/nestjs": "^6.12.7",
+    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/bull": "^11.0.2",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/cache-manager": "^3.0.1",
@@ -36,6 +42,9 @@
     "@nestjs/swagger": "^11.2.0",
     "@prisma/client": "^6.15.0",
     "@prisma/extension-read-replicas": "^0.4.1",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.11.0",
+    "bcryptjs": "^3.0.2",
     "bull": "^4.16.5",
     "bullmq": "^5.41.7",
     "cache-manager": "^6.4.2",
@@ -48,6 +57,7 @@
     "form-data": "^4.0.2",
     "handlebars": "^4.7.8",
     "ioredis": "^5.6.0",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.10.0",
@@ -63,16 +73,7 @@
     "speakeasy": "^2.0.0",
     "swagger-ui-express": "^5.0.1",
     "twilio": "^5.4.5",
-    "@bull-board/api": "^6.12.7",
-		"@bull-board/express": "^6.12.7",
-		"@bull-board/nestjs": "^6.12.7",
-		"@nestjs-modules/mailer": "^2.0.2",
-		"@nestjs/axios": "^4.0.1",
-		"aws-sdk": "^2.1692.0",
-		"bcryptjs": "^3.0.2",
-		"uniqid": "^5.4.0",
-		"joi": "^17.13.3",
-		"axios": "^1.11.0"
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
