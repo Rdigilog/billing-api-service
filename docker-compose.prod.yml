@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digilog-billing-service-prod
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3003}
+      # Database - Remote URLs
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL_REPLICA: ${DATABASE_URL_REPLICA}
+      # Redis - Remote URL
+      REDIS_URL: ${REDIS_URL}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_TIME: ${JWT_EXPIRATION_TIME:-1d}
+      # Mail
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT:-465}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+    ports:
+      - '${PORT:-3003}:3003'
+    healthcheck:
+      test: ['CMD', 'node', '-e', "require('http').get('http://localhost:3003/api/v1/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
