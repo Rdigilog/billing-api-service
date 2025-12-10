@@ -12,6 +12,9 @@ import { StatusInterceptor } from './interceptors/status.interceptor';
 import { UserService } from './services/user.service';
 import { PrismaService } from './config/prisma.service';
 import { bullboardConfig } from './config/bull-board.config';
+import { SubscriptionService } from './services/subscription.service';
+import { SubscriptionController } from './controllers/subscription.controller';
+import { HealthController } from './controllers/health.controller';
 
 @Module({
   imports: [
@@ -28,10 +31,9 @@ import { bullboardConfig } from './config/bull-board.config';
     ConfigModule.forRoot(),
     HttpModule,
     UtilsModule,
-    CacheModule.registerAsync(RedisCacheOptions)
+    CacheModule.registerAsync(RedisCacheOptions),
   ],
-  controllers: [
-  ],
+  controllers: [SubscriptionController, HealthController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
@@ -39,6 +41,7 @@ import { bullboardConfig } from './config/bull-board.config';
     },
     UserService,
     PrismaService,
+    SubscriptionService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

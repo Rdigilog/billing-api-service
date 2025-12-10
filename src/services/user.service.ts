@@ -1,12 +1,9 @@
-
-
 import { Global, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma.service';
 
 @Global()
 @Injectable()
 export class UserService extends PrismaService {
-
   async findByUsername(username: any) {
     const result = await this.user.findFirstOrThrow({
       where: {
@@ -19,7 +16,7 @@ export class UserService extends PrismaService {
     return result;
   }
 
-  async findById(id: string, includePassword = false):Promise<any | null> {
+  async findById(id: string, includePassword = false): Promise<any | null> {
     const result = await this.user.findUnique({
       where: { id },
       select: {
@@ -30,11 +27,10 @@ export class UserService extends PrismaService {
         profile: true,
         password: includePassword,
         userRole: {
-          select: { role: true, company: true },
+          select: { companyId: true, role: true, company: true },
         },
       },
     });
-    return result
+    return result;
   }
-
 }
