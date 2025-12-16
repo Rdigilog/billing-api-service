@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client/edge.js';
 import { PrismaService } from 'src/config/prisma.service';
 
 @Injectable()
-export class BaseService extends PrismaService {
+export class BaseService {
+  constructor(private readonly prisma: PrismaService) {}
+
   async countries() {
     try {
-      const result = await this.country.findMany();
+      const result = await this.prisma.country.findMany();
       return { error: 0, body: result };
       // return { error: 1, body: null };
     } catch (e) {
@@ -25,13 +29,13 @@ export class BaseService extends PrismaService {
       if (search) {
         filter.name = { contains: search, mode: 'insensitive' };
       }
-      const result = await this.country.findMany({
+      const result = await this.prisma.country.findMany({
         take,
         skip,
         where: filter,
         orderBy: { [sortBy]: sortDirection },
       });
-      const totalItems = await this.country.count({
+      const totalItems = await this.prisma.country.count({
         where: filter,
       });
       return { error: 0, body: { result, totalItems } };
@@ -53,14 +57,14 @@ export class BaseService extends PrismaService {
       if (search) {
         filter.name = { contains: search, mode: 'insensitive' };
       }
-      const result = await this.state.findMany({
+      const result = await this.prisma.state.findMany({
         where: filter,
         take,
         skip,
         orderBy: { [sortBy]: sortDirection },
       });
       if (result.length) {
-        const totalItems = await this.state.count({
+        const totalItems = await this.prisma.state.count({
           where: filter,
         });
         return { error: 0, body: { result, totalItems } };
@@ -71,7 +75,7 @@ export class BaseService extends PrismaService {
   }
   async getStatesByName(name: string) {
     try {
-      const result = await this.state.findMany({
+      const result = await this.prisma.state.findMany({
         where: { name },
       });
       if (result.length <= 0) return { error: 1, body: 'No records found' };

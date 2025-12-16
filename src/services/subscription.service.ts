@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+// import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma.service';
 import { UpdateSubscriptionUsersDto } from 'src/models/plans/plan.dto';
 import { ResponsesService } from 'src/utils/services/responses.service';
 
 @Injectable()
-export class SubscriptionService extends PrismaService {
+export class SubscriptionService {
   constructor(
-    private readonly userConfigService: ConfigService,
+    private readonly prisma: PrismaService,
     private readonly responseService: ResponsesService,
   ) {
-    super(userConfigService);
+    // super(userConfigService);
   }
 
   async companySubscription(companyId: string) {
     try {
-      const result = await this.subscription.findFirst({
+      const result = await this.prisma.subscription.findFirst({
         where: { companyId },
         include: {
           plan: true,
@@ -44,7 +44,7 @@ export class SubscriptionService extends PrismaService {
         filter.OR = [];
       }
 
-      const result = await this.billingHistory.findMany({
+      const result = await this.prisma.billingHistory.findMany({
         where: filter,
         include: {
           plan: true,
@@ -56,7 +56,9 @@ export class SubscriptionService extends PrismaService {
         take: limit,
       });
 
-      const totalItems = await this.billingHistory.count({ where: filter });
+      const totalItems = await this.prisma.billingHistory.count({
+        where: filter,
+      });
       const paginatedProduct = this.responseService.pagingData(
         { result, totalItems },
         page,
@@ -71,7 +73,7 @@ export class SubscriptionService extends PrismaService {
 
   async addUsers(companyId: string, payload: UpdateSubscriptionUsersDto) {
     try {
-      const result = await this.subscription.update({
+      const result = await this.prisma.subscription.update({
         where: { companyId },
         data: payload,
       });
@@ -83,7 +85,7 @@ export class SubscriptionService extends PrismaService {
 
   async cancelSubscription(companyId: string) {
     try {
-      await this.subscription.update({
+      await this.prisma.subscription.update({
         where: { companyId },
         data: { status: 'CANCELLED' },
       });

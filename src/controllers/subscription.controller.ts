@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -16,7 +19,7 @@ import {
   ApiOkResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AuthUser } from 'src/decorators/logged-in-user-decorator';
+import { AuthComapny } from 'src/decorators/logged-in-user-decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { UpdateSubscriptionUsersDto } from 'src/models/plans/plan.dto';
 import {
@@ -24,7 +27,7 @@ import {
   PaginatedResponse,
 } from 'src/models/responses/generic.dto';
 import { InvoiceDto, SubscriptionDto } from 'src/models/responses/subscription';
-import type { LoggedInUser } from 'src/models/types/user.types';
+import type { activeCompaany } from 'src/models/types/user.types';
 import { SubscriptionService } from 'src/services/subscription.service';
 import { ResponsesService } from 'src/utils/services/responses.service';
 
@@ -71,7 +74,7 @@ export class SubscriptionController {
   @ApiQuery({ name: 'sortBy', required: false, type: String })
   @Get('/billing-history')
   async list(
-    @AuthUser() user: LoggedInUser,
+    @AuthComapny() company: activeCompaany,
     @Query('page') page: number = 1,
     @Query('size') size: number = 50,
     @Query('search') search?: string,
@@ -80,7 +83,7 @@ export class SubscriptionController {
   ) {
     try {
       const result = await this.service.companyBillingHistory(
-        user.userRole[0].companyId as string,
+        company.id,
         page,
         size,
         search,
@@ -110,11 +113,9 @@ export class SubscriptionController {
     },
   })
   @Get()
-  async companySubscription(@AuthUser() user: LoggedInUser) {
+  async companySubscription(@AuthComapny() company: activeCompaany) {
     try {
-      const result = await this.service.companySubscription(
-        user.userRole[0].companyId as string,
-      );
+      const result = await this.service.companySubscription(company.id);
       if (result.error == 2) {
         return this.responseService.notFound('company has no subscription');
       }
@@ -131,14 +132,11 @@ export class SubscriptionController {
       'This endpoint updates the total number of users assigned to a specific company. The value must be an integer greater than or equal to zero.',
   })
   async updateUserSubscription(
-    @AuthUser() user: LoggedInUser,
+    @AuthComapny() company: activeCompaany,
     @Body() payload: UpdateSubscriptionUsersDto,
   ) {
     try {
-      const result = await this.service.addUsers(
-        user.userRole[0].companyId as string,
-        payload,
-      );
+      const result = await this.service.addUsers(company.id, payload);
       if (result.error == 2) {
         return this.responseService.exception(result.body);
       }
@@ -154,11 +152,12 @@ export class SubscriptionController {
     description:
       'This endpoint updates the total number of users assigned to a specific company. The value must be an integer greater than or equal to zero.',
   })
-  async cancelSubscription(@AuthUser() user: LoggedInUser) {
+  async cancelSubscription(
+    @AuthComapny() company: activeCompaany,
+    // @AuthUser() user: LoggedInUser,
+  ) {
     try {
-      const result = await this.service.cancelSubscription(
-        user.userRole[0].companyId as string,
-      );
+      const result = await this.service.cancelSubscription(company.id);
       if (result.error == 2) {
         return this.responseService.exception(result.body);
       }
