@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
@@ -27,6 +26,10 @@ import {
   PaginatedResponse,
 } from 'src/models/responses/generic.dto';
 import { InvoiceDto, SubscriptionDto } from 'src/models/responses/subscription';
+import {
+  ConfirmPaymentDTO,
+  InitializePaymentDto,
+} from 'src/models/subscription/payment.dto';
 import type { activeCompaany } from 'src/models/types/user.types';
 import { SubscriptionService } from 'src/services/subscription.service';
 import { ResponsesService } from 'src/utils/services/responses.service';
@@ -158,6 +161,51 @@ export class SubscriptionController {
   ) {
     try {
       const result = await this.service.cancelSubscription(company.id);
+      if (result.error == 2) {
+        return this.responseService.exception(result.body);
+      }
+      return this.responseService.success(result.body);
+    } catch (e) {
+      return this.responseService.exception(e.message);
+    }
+  }
+
+  @Post('payment/initialize')
+  @ApiOperation({
+    summary: 'Update a company total number of users for subscription',
+    description:
+      'This endpoint updates the total number of users assigned to a specific company. The value must be an integer greater than or equal to zero.',
+  })
+  async initializePayment(
+    @AuthComapny() company: activeCompaany,
+    @Body() body: InitializePaymentDto,
+    // @AuthUser() user: LoggedInUser,
+  ) {
+    try {
+      const result = await this.service.initiateInvoicePayment(body);
+      if (result.error == 2) {
+        return this.responseService.exception(result.body);
+      }
+      return this.responseService.success(result.body);
+    } catch (e) {
+      return this.responseService.exception(e.message);
+    }
+  }
+  @Post('payment/confirm')
+  @ApiOperation({
+    summary: 'Update a company total number of users for subscription',
+    description:
+      'This endpoint updates the total number of users assigned to a specific company. The value must be an integer greater than or equal to zero.',
+  })
+  async confirmPaymet(
+    @AuthComapny() company: activeCompaany,
+    @Body() body: ConfirmPaymentDTO,
+  ) {
+    try {
+      const result = await this.service.verifyInvoicePayment(
+        body.reference,
+        body.savecard,
+      );
       if (result.error == 2) {
         return this.responseService.exception(result.body);
       }

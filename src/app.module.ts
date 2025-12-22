@@ -15,6 +15,9 @@ import { bullboardConfig } from './config/bull-board.config';
 import { SubscriptionService } from './services/subscription.service';
 import { SubscriptionController } from './controllers/subscription.controller';
 import { HealthController } from './controllers/health.controller';
+import { PaystackService } from './services/thirdparty/paystack.service';
+import { CardinformationService } from './services/cardinformation.service';
+import { CardinformationController } from './controllers/cardinformation.controller';
 
 @Module({
   imports: [
@@ -28,12 +31,18 @@ import { HealthController } from './controllers/health.controller';
     MailConfig,
     bullboardConfig,
     // QueueModuleConfig,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true, // 👈 THIS
+    }),
     HttpModule,
     UtilsModule,
     CacheModule.registerAsync(RedisCacheOptions),
   ],
-  controllers: [SubscriptionController, HealthController],
+  controllers: [
+    SubscriptionController,
+    HealthController,
+    CardinformationController,
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,
@@ -42,6 +51,8 @@ import { HealthController } from './controllers/health.controller';
     UserService,
     PrismaService,
     SubscriptionService,
+    PaystackService,
+    CardinformationService,
   ],
 })
 export class AppModule {}

@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.setGlobalPrefix('operations/api/v1');
+  app.setGlobalPrefix('billing/api/v1');
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
   const config = new DocumentBuilder()
@@ -49,7 +49,7 @@ async function bootstrap() {
   //   res.sendFile(swaggerFile);
   // });
 
-  SwaggerModule.setup('operations/api/docs', app, document);
+  SwaggerModule.setup('billing/api/docs', app, document);
   await app.listen(configService.get<number>(CONFIG_KEYS.PORT) || 3003);
 }
 bootstrap();
